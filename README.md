@@ -61,8 +61,10 @@ process it, and return a json-type data, which contains the following:
 
 In order to launch:
 ```
+cd detection
 conda create -n detection python=3.7
 pip install -r requirements.txt
+python 
 ```
 
 <h3>Server</h3>

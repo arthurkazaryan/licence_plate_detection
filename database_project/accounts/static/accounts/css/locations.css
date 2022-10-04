@@ -1,0 +1,15 @@
+.camera-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.form-button {
+    display: flex;
+    flex-direction: column;
+}

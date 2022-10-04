@@ -1,0 +1,153 @@
+body {
+    background-color: #F3F3F5;
+    margin: 0;
+    padding: 0;
+    overflow-y: scroll;
+}
+
+.main-block {
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.header-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+}
+
+.white-background {
+    background-color: white;
+    border: 1px solid #ced4da;
+}
+
+
+.logo-text {
+    display: flex;
+    align-items: center;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+    color: black;
+}
+
+.main-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 360px;
+}
+
+.main-description {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+.mb-10 {
+    margin-bottom: 10px;
+}
+
+.ml-10 {
+    margin-left: 10px;
+}
+
+.mr-10 {
+    margin-right: 10px;
+}
+
+.pd-10 {
+    padding: 10px;
+}
+
+/* BUTTONS */
+.button {
+    color: #7B7B7B;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    padding: 6px 12px 6px 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.15s linear;
+    border: 2px solid;
+    border-color: #F3F3F5;
+    border-radius: 15px;
+}
+
+.button.active,
+.button:hover {
+    background-color: #EDEDED;
+    border-color: #EDEDED;
+}
+
+.button.color {
+    color: white;
+    background-color: black;
+    border: 2px solid;
+    border-color: black;
+}
+
+.button.color.active,
+.button.color:hover {
+    color: black;
+    background-color: #fff;
+}
+
+/* FORMS */
+.input-form {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    appearance: none;
+    width: 240px;
+}
+
+/* FORM SIZES */
+.form-xsmall {
+    font-size: 12px;
+    width: 80px;
+    white-space: nowrap;
+}
+
+.form-small {
+    font-size: 12px;
+    min-width: 80px;
+    white-space: nowrap;
+}
+
+.form-middle {
+    font-size: 14px;
+    min-width: 240px;
+    padding: 5px 5px 5px 5px;
+}
+
+.form-large {
+    font-size: 16px;
+    min-width: 450px;
+    padding: 10px 10px 10px 10px;
+}
+
+/* TEXT */
+.text-title {
+    font-family: 'Inter', sans-serif;
+    /* font-size: 40px; */
+}
+
+.text-description {
+    font-family: 'Inter', sans-serif;
+    /* font-size: 24px; */
+}
