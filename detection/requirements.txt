@@ -16,6 +16,7 @@ fastapi
 python-multipart
 uvicorn
 easyocr
+tensorflow
 
 # Logging -------------------------------------
 # tensorboard>=2.4.1

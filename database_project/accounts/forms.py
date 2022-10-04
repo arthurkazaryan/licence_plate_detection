@@ -20,10 +20,5 @@ class LoginForm(AuthenticationForm):
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'input-form form-large', 'autocomplete': 'current-password'}))
 
 
-# class SendAPIForm(forms.Form):
-#     count = forms.IntegerField(label='Посетителей', widget=forms.TextInput(attrs={'class': 'input-form form-xsmall'}))
-#     warning_flag = forms.BooleanField(label='Нарушение', required=False)
-#     user = forms.IntegerField(label='ID пользователя', widget=forms.TextInput(attrs={'class': 'input-form form-xsmall'}))
-#     camera = forms.IntegerField(label='ID камеры', widget=forms.TextInput(attrs={'class': 'input-form form-xsmall'}))
-#     date = forms.DateTimeField(label='Время фиксации', widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'input-form form-xsmall'}),
-#                                initial=datetime.date.today(), localize=True)
+class SendImageForm(forms.Form):
+    image_path = forms.FileField(widget=forms.FileInput(attrs={'accept': 'image/*'}))

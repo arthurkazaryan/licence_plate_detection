@@ -8,5 +8,29 @@
 {% endblock %}
 
 {% block content %}
-
+    <h2 class="text-title">Snapshots</h2>
+    <hr>
+    <div class="cards">
+    <div class="white-background card mb-10 pd-10">
+        <form action="" method="post" align="center" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for f in image_form %}
+            <label for="{{ f.id_for_label }}">{{ f.label }}</label>
+            <div class="mb-10">{{ f }}</div>
+            <div class="">{{ f.errors }}</div>
+        {% endfor %}
+        <button type="submit" class="button color form-middle mt-10">Send photo</button>
+        </form>
+    </div>
+    {% for camera in images %}
+    <div class="white-background card mb-10 pd-10">
+        <img src="/media/{{ camera.image }}" width="100%">
+        <hr>
+        <div class="locations">
+            <p class="text-description">{{ camera.plate_number }}</p>
+            <a class="button color form-small" href="{% url 'accounts-view' camera.image_uuid %}">Открыть</a>
+        </div>
+    </div>
+    {% endfor %}
+    </div>
 {% endblock %}

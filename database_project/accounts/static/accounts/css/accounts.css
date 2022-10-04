@@ -5,6 +5,22 @@
     padding: 10px;
 }
 
+.card {
+    width: 450px
+}
+
+.cards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.image-overview {
+    display: flex;
+    flex-direction: row;
+}
+
 .locations {
     display: flex;
     flex-direction: row;

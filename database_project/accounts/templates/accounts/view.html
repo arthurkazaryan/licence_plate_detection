@@ -1,0 +1,27 @@
+{% extends 'database/base.html' %}
+
+{% load static %}
+<!DOCTYPE html>
+
+{% block links %}
+    <link type="text/css" href="{% static 'accounts/css/accounts.css' %}" rel="stylesheet"/>
+    <link type="text/css" href="{% static 'accounts/css/locations.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+    <h2 class="text-title">{{ image.plate_number }} / {{ image.color }}</h2>
+    <hr>
+    <div class="white-background mt-10 pd-10">
+        <div class="image-overview">
+            <img src="/media/{{ image.image }}" width="540">
+            <div class="ml-10">
+                <p>Plate number: {{ image.plate_number }}</p>
+                <p>Vehicle type: {{ image.vehicle_type }}</p>
+                <p>Vehicle color: {{ image.color }}</p>
+                <p>Date: {{ image.date }}</p>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

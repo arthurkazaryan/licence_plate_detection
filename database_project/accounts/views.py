@@ -7,7 +7,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, TemplateView, UpdateView
 from django.shortcuts import render
-from accounts.forms import RegistrationForm, LoginForm
+from accounts.forms import RegistrationForm, LoginForm, SendImageForm
 from accounts.models import UserCamera, UserSnapshot
 # from accounts.forms import SendAPIForm
 from database.utils import DataMixin
@@ -62,6 +62,7 @@ class ProfilePage(DataMixin, TemplateView, LoginRequiredMixin):
         if not request.user.is_authenticated:
             return HttpResponseRedirect(reverse_lazy(self.get_login_url()))
 
+        image_form = SendImageForm
         cameras = UserCamera.objects.filter(user=request.user).order_by('-date')
         images = UserSnapshot.objects.filter(user=request.user, camera=None).order_by('-date')
 
@@ -69,7 +70,8 @@ class ProfilePage(DataMixin, TemplateView, LoginRequiredMixin):
             current_page='accounts-home',
             user=request.user,
             cameras=cameras,
-            images=images
+            images=images,
+            image_form=image_form
         )
 
         return render(request, self.template_name, context=context)
@@ -83,25 +85,21 @@ class ViewPage(DataMixin, TemplateView, LoginRequiredMixin):
         if not request.user.is_authenticated:
             return HttpResponseRedirect(reverse_lazy(self.get_login_url()))
 
-        # location_id = kwargs['id']
+        context = self.get_user_context(
+            user=request.user,
+        )
+
+        sample_uuid = kwargs['uuid']
+        print(sample_uuid)
+        camera = UserCamera.objects.filter(camera_uuid=sample_uuid)
+        image = UserSnapshot.objects.filter(image_uuid=sample_uuid)
+
+        print(camera)
+        print(image)
+        if image:
+            context['image'] = image[0]
         # user_location = get_object_or_404(UserLocation, user=request.user, id=location_id)
         # user_cameras = LocationCamera.objects.filter(user=request.user, location=user_location)
         # camera_table = CustomerDataRegistration.objects.filter(user=request.user).order_by('-date')
-        # request_form = SendAPIForm(
-        #     initial={
-        #         'count': 6,
-        #         'warning_flag': True,
-        #         'user': 1,
-        #         'camera': 1,
-        #     }
-        # )
-
-        context = self.get_user_context(
-            user=request.user,
-            # location=user_location,
-            # user_cameras=user_cameras,
-            # request_form=request_form,
-            # camera_table=camera_table
-        )
 
         return render(request, self.template_name, context=context)
