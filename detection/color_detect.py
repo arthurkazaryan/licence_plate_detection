@@ -1,6 +1,7 @@
 from utils.datasets import LoadImages
 from utils.torch_utils import select_device
 from utils.general import check_img_size
+from PIL import Image
 from ast import literal_eval
 import numpy as np
 import tensorflow as tf
@@ -32,9 +33,9 @@ class ColorModel:
 
     def predict(self, image_path, veh_coordinates):
 
-        img = [] # load and resize image
-        imgsz = check_img_size(self.img_size)
-        img = LoadImages(image_path, img_size=imgsz)
+        image = Image.open(image_path)
+        image_array = np.array(image)
+        img = image_array[veh_coordinates[1]: veh_coordinates[3], veh_coordinates[0]: veh_coordinates[2]]
 
         id_color = {0:'black', 1:'blue', 2:'cyan', 3:'gray', 4:'green', 5:'red', 6:'white', 7:'yellow'}
         pred_color = id_color[np.argmax(model.predict(img))]

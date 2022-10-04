@@ -5,6 +5,7 @@ from datetime import datetime
 from detect import YoloV7Model
 from color_detect import ColorModel
 # from type_detect import VehicleTypeModel
+from utils.coordinates import get_vehicle_registration_plate
 from ocr.main import get_plate_number
 import configparser
 import tempfile
@@ -31,25 +32,21 @@ async def post_detecetion(image: UploadFile = File(...)):
     with open(temp_path, 'wb') as uploaded_image:
         shutil.copyfileobj(image.file, uploaded_image)
     coordinates = yolo_v7_model.detect(temp_path)
-    plate_number = get_plate_number(ocr_reader, temp_path, coordinates)
-    print('COORDINATES', coordinates)
-    print('PLATE NUMBER', plate_number)
-    os.remove(temp_path)
-        
-    veh_coordinates = [coor_i for coor_i in coordinates['car']
-                               if coor_i[0] < coordinates['vehicle_registration_plate'][0][0] and
-                                  coor_i[1] < coordinates['vehicle_registration_plate'][0][1] and
-                                  coor_i[2] > coordinates['vehicle_registration_plate'][0][2] and
-                                  coor_i[3] > coordinates['vehicle_registration_plate'][0][3]]
+    coordinates_veh_plate = get_vehicle_registration_plate(coordinates)
+    print('COORDINATES DICT', coordinates_veh_plate)
 
-    print('VEHICLE COORDINATES', veh_coordinates)
-    if veh_coordinates != []:
+    for veh_i in range(len(coordinates_veh_plate)):
+        plate_number = get_plate_number(ocr_reader, temp_path, coordinates_veh_plate['vehicle_'+str(veh_i)])
+        coordinates_veh_plate['vehicle_'+str(veh_i)]['number'] = plate_number
+    print('NUMBERS', coordinates_veh_plate)
+    
+    os.remove(temp_path)    
 
-        vehicle_color, veh_img = color_model.predict(temp_path, veh_coordinates[0])
-        print('COLOR', vehicle_color)
-        print(veh_img)
-
-        # vehicle_type = '' # v_type_model.predict(veh_img)
+    if coordinates_veh_plate:
+        for veh_i in range(len(coordinates_veh_plate)):
+            vehicle_color, veh_img = color_model.predict(temp_path, coordinates_veh_plate['vehicle_'+str(veh_i)]['vehicle'])
+            print('COLOR', vehicle_color)
+            vehicle_type = '' # v_type_model.predict(veh_img)
     else:
         print('Not correct')
         vehicle_color = 'Error'
