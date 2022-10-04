@@ -1,8 +1,10 @@
 from models.experimental import attempt_load
 from utils.datasets import LoadImages
-from utils.general import check_img_size, non_max_suppression, scale_coords, xyxy2xywh
+from utils.general import check_img_size, non_max_suppression, scale_coords, xyxy2xywh, xywh2xyxy
 from utils.torch_utils import select_device, TracedModel
 from ast import literal_eval
+from PIL import Image
+import numpy as np
 import torch
 
 
@@ -77,12 +79,11 @@ class YoloV7Model:
                 for i, det in enumerate(pred):
                     p, s, im0, frame = path, '', im0s, getattr(dataset, 'frame', 0)
 
-                    gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]
+                    # gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]
                     if len(det):
                         det[:, :4] = scale_coords(img.shape[2:], det[:, :4], im0.shape).round()
                         for *xyxy, conf, cls in reversed(det):
-                            xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()
-                            coordinates[self.names[int(cls.item())]].append(xywh)
+                            coordinates[self.names[int(cls.item())]].append([int(coord.item()) for coord in xyxy])
 
         return coordinates
 
