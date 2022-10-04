@@ -11,4 +11,5 @@ print('start predict')
 result = reader.readtext(image_path)
 
 print(result)
+print(result[0][1])
 print(time() - cur_time)
