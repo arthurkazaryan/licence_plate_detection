@@ -1,0 +1,26 @@
+{% extends 'database/base.html' %}
+
+{% load static %}
+<!DOCTYPE html>
+
+{% block links %}
+    <link type="text/css" href="{% static 'accounts/css/accounts.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+    <h2 class="text-title">{{ project.date }}</h2>
+    <hr>
+    <div class="white-background mt-10 pd-10">
+        <img src="/media/{{ project.image }}" width="100%">
+        {% for rec_data in data %}
+            <hr>
+            <div class="ml-10">
+                <p>Plate number: {{ rec_data.plate_number }}</p>
+                <p>Vehicle color: {{ rec_data.color }}</p>
+                <p>Date: {{ rec_data.date }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+
+{% endblock %}

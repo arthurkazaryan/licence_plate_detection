@@ -1,0 +1,26 @@
+{% extends 'database/base.html' %}
+
+{% load static %}
+<!DOCTYPE html>
+
+{% block links %}
+    <link type="text/css" href="{% static 'accounts/css/accounts.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+    <h1 class="text-title">Регистрация</h1>
+    <div class="white-background authorization">
+        <form method="post">
+            {% csrf_token %}
+            {% for f in form %}
+                <label class="text-description" for="{{ f.id_for_label }}">{{ f.label }}</label>
+                <div class="mb-10">{{ f }}</div>
+                <div class="">{{ f.errors }}</div>
+            {% endfor %}
+            <button type="submit" class="button color form-large mt-10">Зарегистрироваться</button>
+        </form>
+        <br>
+        <p class="text-description">Уже зарегистрированы?</p>
+        <a class="button active form-large" href="{% url 'accounts-login' %}">Войти</a>
+    </div>
+{% endblock %}

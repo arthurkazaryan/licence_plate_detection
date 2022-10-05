@@ -1,0 +1,44 @@
+.authorization {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+
+.card {
+    width: 450px
+}
+
+.cards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.image-overview {
+    display: flex;
+    flex-direction: row;
+}
+
+.locations {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.alert {
+    padding: 20px;
+    border: 2px solid;
+}
+
+.alert.success {
+    border-color: #58c758;
+    background-color: #cefad0;
+}
+
+.alert.error {
+    border-color: #f44336;
+    background-color: #FFCCCB
+}

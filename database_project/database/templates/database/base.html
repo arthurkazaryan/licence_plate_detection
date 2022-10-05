@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+    <meta charset="utf-8">
+    <title>{{ title }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Nunito&display=swap" rel="stylesheet">
+
+    <link type="text/css" href="{% static 'database/css/main.css' %}" rel="stylesheet"/>
+    {% block links %}
+    {% endblock %}
+    </head>
+    <body>
+        <header class="main-block">
+            <div class="header-bar pd-10">
+                <div class="logo-text">
+                    <h3>Notorious dudes</h3>
+                </div>
+                <nav>
+                    {% for m_item in menu_items %}
+                        {% if m_item.url_name == current_page %}
+                            <a class="button active form-small" href="{% url m_item.url_name %}">{{ m_item.title }}</a>
+                        {% else %}
+                            <a class="button form-small" href="{% url m_item.url_name %}">{{ m_item.title }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </nav>
+                <nav>
+                    {% for u_item in user_items %}
+                        {% if u_item.url_name == current_page %}
+                            <a class="button color active form-small" href="{% url u_item.url_name %}">{{ u_item.title }}</a>
+                        {% else %}
+                            <a class="button color form-small" href="{% url u_item.url_name %}">{{ u_item.title }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </nav>
+            </div>
+        </header>
+        <main class="main-block">
+            {% block content %}
+            {% endblock %}
+        </main>
+    </body>
+
+</html>
