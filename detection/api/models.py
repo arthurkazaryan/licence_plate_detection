@@ -6,3 +6,5 @@ class DetectionResult(BaseModel):
     date: str
     color: str
     number: str
+    vehicle: list
+    plate: list

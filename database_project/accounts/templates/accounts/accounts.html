@@ -8,6 +8,14 @@
 {% endblock %}
 
 {% block content %}
+    {% if messages %}
+        {% for message in messages %}
+          <div class="alert {{ message.tags }} white-board">
+<!--              <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>-->
+              {{ message }}
+          </div>
+        {% endfor %}
+    {% endif %}
     <h2 class="text-title">Snapshots</h2>
     <hr>
     <div class="cards">
@@ -22,13 +30,13 @@
         <button type="submit" class="button color form-middle mt-10">Send photo</button>
         </form>
     </div>
-    {% for camera in images %}
+    {% for snapshot in snapshots %}
     <div class="white-background card mb-10 pd-10">
-        <img src="/media/{{ camera.image }}" width="100%">
+        <img src="/media/{{ snapshot.image }}" width="100%">
         <hr>
         <div class="locations">
-            <p class="text-description">{{ camera.plate_number }}</p>
-            <a class="button color form-small" href="{% url 'accounts-view' camera.image_uuid %}">Открыть</a>
+            <p class="text-description">{{ snapshot.date }}</p>
+            <a class="button color form-small" href="{% url 'accounts-view' snapshot.project_uuid %}">Открыть</a>
         </div>
     </div>
     {% endfor %}

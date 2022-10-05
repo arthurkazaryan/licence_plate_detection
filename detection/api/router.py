@@ -40,7 +40,9 @@ async def post_detecetion(image: UploadFile = File(...)):
                 camera_id=1,
                 date=datetime.now().isoformat(),
                 color=vehicle_color,
-                number=plate_number.upper()
+                number=plate_number.upper(),
+                vehicle=data['vehicle'],
+                plate=data['vehicle_registration_plate']
             ).dict())
 
     os.remove(temp_path)

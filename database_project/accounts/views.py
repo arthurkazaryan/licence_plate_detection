@@ -8,7 +8,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, TemplateView, UpdateView
 from django.shortcuts import render
 from accounts.forms import RegistrationForm, LoginForm, SendImageForm
-from accounts.models import UserCamera, UserSnapshot
+from accounts.models import UserCamera, UserSnapshotItem, UserSnapshotProject
 # from accounts.forms import SendAPIForm
 from database.utils import DataMixin
 
@@ -64,17 +64,27 @@ class ProfilePage(DataMixin, TemplateView, LoginRequiredMixin):
 
         image_form = SendImageForm
         cameras = UserCamera.objects.filter(user=request.user).order_by('-date')
-        images = UserSnapshot.objects.filter(user=request.user, camera=None).order_by('-date')
+        snapshots = UserSnapshotProject.objects.filter(user=request.user, camera=None).order_by('-date')
 
         context = self.get_user_context(
             current_page='accounts-home',
             user=request.user,
             cameras=cameras,
-            images=images,
+            snapshots=snapshots,
             image_form=image_form
         )
 
         return render(request, self.template_name, context=context)
+
+    def post(self, request, *args, **kwargs):
+
+        send_image_form = SendImageForm(request.POST, request.FILES)
+        if send_image_form.is_valid():
+            messages.success(request, f'Image has been successfully created.')
+        else:
+            messages.error(request, f'Error occurred when processing data.')
+
+        return HttpResponseRedirect(reverse('accounts-home'))
 
 
 class ViewPage(DataMixin, TemplateView, LoginRequiredMixin):
@@ -89,17 +99,12 @@ class ViewPage(DataMixin, TemplateView, LoginRequiredMixin):
             user=request.user,
         )
 
-        sample_uuid = kwargs['uuid']
-        print(sample_uuid)
-        camera = UserCamera.objects.filter(camera_uuid=sample_uuid)
-        image = UserSnapshot.objects.filter(image_uuid=sample_uuid)
+        project_uuid = kwargs['uuid']
+        project = UserSnapshotProject.objects.filter(project_uuid=project_uuid)
+        data = UserSnapshotItem.objects.filter(project__id__in=project.all())
 
-        print(camera)
-        print(image)
-        if image:
-            context['image'] = image[0]
-        # user_location = get_object_or_404(UserLocation, user=request.user, id=location_id)
-        # user_cameras = LocationCamera.objects.filter(user=request.user, location=user_location)
-        # camera_table = CustomerDataRegistration.objects.filter(user=request.user).order_by('-date')
+        context['project'] = project[0]
+        if data:
+            context['data'] = data
 
         return render(request, self.template_name, context=context)

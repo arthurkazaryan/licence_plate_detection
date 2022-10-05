@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.forms import ModelForm
 import uuid
 
 
@@ -38,7 +37,7 @@ class UserCamera(models.Model):
         verbose_name_plural = 'Камеры'
 
 
-class UserSnapshot(models.Model):
+class UserSnapshotProject(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -49,10 +48,10 @@ class UserSnapshot(models.Model):
         null=True,
         blank=True
     )
-    image_uuid = models.UUIDField(
+    project_uuid = models.UUIDField(
         default=uuid.uuid4,
         editable=False,
-        verbose_name='UUID изображения',
+        verbose_name='UUID проекта',
         unique=True,
     )
     image = models.FileField(
@@ -61,13 +60,32 @@ class UserSnapshot(models.Model):
         null=True,
         blank=True
     )
+    date = models.DateTimeField(
+        verbose_name='Время фиксации'
+    )
+
+    def __str__(self):
+        return f"{self.project_uuid}"
+
+    class Meta:
+        verbose_name = 'Распознанное изображение'
+        verbose_name_plural = 'Распознанные изображения'
+
+
+class UserSnapshotItem(models.Model):
+    project = models.ForeignKey(
+        UserSnapshotProject,
+        on_delete=models.CASCADE,
+    )
+    shapshot_uuid = models.UUIDField(
+        default=uuid.uuid4,
+        editable=False,
+        verbose_name='UUID объекта',
+        unique=True,
+    )
     color = models.CharField(
         verbose_name='Цвет ТС',
         max_length=20
-    )
-    vehicle_type = models.CharField(
-        verbose_name='Тип ТС',
-        max_length=32
     )
     plate_number = models.CharField(
         verbose_name='Номер ТС',
@@ -78,8 +96,8 @@ class UserSnapshot(models.Model):
     )
 
     def __str__(self):
-        return f"{self.user.username}"
+        return f"{self.plate_number}"
 
     class Meta:
-        verbose_name = 'Распознанное изображение'
-        verbose_name_plural = 'Распознанные изображения'
+        verbose_name = 'Информация о распознавании'
+        verbose_name_plural = 'Информация о распознавании'
