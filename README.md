@@ -73,4 +73,17 @@ python launch_api.py
 ```
 
 <h3>Django server</h3>
-Yet to be done
+
+In order to launch:
+
+```
+cd database_project
+conda create -n django_database python=3.7
+pip install -r requirements.txt
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
+```
+
+<p align="center"><img src="./misc/view.jpg" alt="scheme" width="100%"></p>
+<p align="center">View page of a detected picture</p>
