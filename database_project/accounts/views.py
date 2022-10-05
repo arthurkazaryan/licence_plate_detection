@@ -9,8 +9,9 @@ from django.views.generic import CreateView, TemplateView, UpdateView
 from django.shortcuts import render
 from accounts.forms import RegistrationForm, LoginForm, SendImageForm
 from accounts.models import UserCamera, UserSnapshotItem, UserSnapshotProject
-# from accounts.forms import SendAPIForm
 from database.utils import DataMixin
+import requests
+import cv2
 
 
 class RegisterUser(DataMixin, CreateView):
@@ -80,7 +81,32 @@ class ProfilePage(DataMixin, TemplateView, LoginRequiredMixin):
 
         send_image_form = SendImageForm(request.POST, request.FILES)
         if send_image_form.is_valid():
-            messages.success(request, f'Image has been successfully created.')
+            data = send_image_form.cleaned_data
+            file = {'image': data['image_path']}
+            try:
+                response = requests.post("http://127.0.0.1:7861/api/v1/detection/push", files=file)
+                response_data = response.json()
+                user_snapshot_project = UserSnapshotProject(
+                    user=request.user,
+                    image=data['image_path']
+                )
+                user_snapshot_project.save()
+                image = cv2.imread(user_snapshot_project.image.path)
+                for data in response_data:
+                    user_snapshot_item = UserSnapshotItem(
+                        project_id=user_snapshot_project.id,
+                        color=data['color'],
+                        plate_number=data['number'],
+                    )
+                    user_snapshot_item.save()
+                    veh_co = data['vehicle']
+                    pl_co = data['plate']
+                    image = cv2.rectangle(image, veh_co[:2], veh_co[2:], (0, 0, 255), 2)
+                    image = cv2.rectangle(image, pl_co[:2], pl_co[2:], (0, 255, 255), 2)
+                cv2.imwrite(user_snapshot_project.image.path, image)
+                messages.success(request, f'Project has been successfully created.')
+            except:
+                messages.error(request, f'Server is currently unavailable.')
         else:
             messages.error(request, f'Error occurred when processing data.')
 

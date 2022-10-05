@@ -61,7 +61,8 @@ class UserSnapshotProject(models.Model):
         blank=True
     )
     date = models.DateTimeField(
-        verbose_name='Время фиксации'
+        verbose_name='Время фиксации',
+        auto_now_add=True
     )
 
     def __str__(self):
@@ -92,7 +93,8 @@ class UserSnapshotItem(models.Model):
         max_length=32
     )
     date = models.DateTimeField(
-        verbose_name='Время фиксации'
+        verbose_name='Время фиксации',
+        auto_now_add=True
     )
 
     def __str__(self):
