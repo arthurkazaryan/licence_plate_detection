@@ -27,7 +27,7 @@
             <div class="mb-10">{{ f }}</div>
             <div class="">{{ f.errors }}</div>
         {% endfor %}
-        <button type="submit" class="button color form-middle mt-10">Send photo</button>
+        <button type="submit" class="button color form-middle mt-10">Predict</button>
         </form>
     </div>
     {% for snapshot in snapshots %}
@@ -36,7 +36,7 @@
         <hr>
         <div class="locations">
             <p class="text-description">{{ snapshot.date }}</p>
-            <a class="button color form-small" href="{% url 'accounts-view' snapshot.project_uuid %}">Открыть</a>
+            <a class="button color form-small" href="{% url 'accounts-view' snapshot.project_uuid %}">Open</a>
         </div>
     </div>
     {% endfor %}

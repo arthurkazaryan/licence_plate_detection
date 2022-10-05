@@ -1,7 +1,7 @@
-user_unauthorized_items = [{'title': 'Регистрация', 'url_name': 'accounts-register'},
-                           {'title': 'Войти', 'url_name': 'accounts-login'}]
-user_authorized_items = [{'title': 'Профиль', 'url_name': 'accounts-home'},
-                         {'title': 'Выход', 'url_name': 'accounts-logout'}]
+user_unauthorized_items = [{'title': 'Sign up', 'url_name': 'accounts-register'},
+                           {'title': 'Log in', 'url_name': 'accounts-login'}]
+user_authorized_items = [{'title': 'Profile', 'url_name': 'accounts-home'},
+                         {'title': 'Log out', 'url_name': 'accounts-logout'}]
 
 
 class DataMixin:
