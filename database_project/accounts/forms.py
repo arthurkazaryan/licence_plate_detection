@@ -22,3 +22,7 @@ class LoginForm(AuthenticationForm):
 
 class SendImageForm(forms.Form):
     image_path = forms.FileField(widget=forms.FileInput(attrs={'accept': 'image/*'}))
+
+
+class SendVideoForm(forms.Form):
+    video_path = forms.FileField(widget=forms.FileInput(attrs={'accept': 'video/*'}))

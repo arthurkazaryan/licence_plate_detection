@@ -7,7 +7,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, TemplateView, UpdateView
 from django.shortcuts import render
-from accounts.forms import RegistrationForm, LoginForm, SendImageForm
+from accounts.forms import RegistrationForm, LoginForm, SendImageForm, SendVideoForm
 from accounts.models import UserCamera, UserSnapshotItem, UserSnapshotProject
 from database.utils import DataMixin
 import requests
@@ -64,6 +64,7 @@ class ProfilePage(DataMixin, TemplateView, LoginRequiredMixin):
             return HttpResponseRedirect(reverse_lazy(self.get_login_url()))
 
         image_form = SendImageForm
+        video_form = SendVideoForm
         cameras = UserCamera.objects.filter(user=request.user).order_by('-date')
         snapshots = UserSnapshotProject.objects.filter(user=request.user, camera=None).order_by('-date')
 
@@ -72,7 +73,8 @@ class ProfilePage(DataMixin, TemplateView, LoginRequiredMixin):
             user=request.user,
             cameras=cameras,
             snapshots=snapshots,
-            image_form=image_form
+            image_form=image_form,
+            video_form=video_form
         )
 
         return render(request, self.template_name, context=context)

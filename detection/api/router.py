@@ -11,8 +11,11 @@ import configparser
 import tempfile
 import easyocr
 import shutil
+import cv2
 import os
 
+from utils.datasets import LoadImages
+from utils.general import check_img_size
 
 detection_v1 = APIRouter()
 
@@ -29,23 +32,27 @@ type_model = VehicleTypeModel.create_model(config_object=config)
 
 
 @detection_v1.post('/push', tags=['detection'])
-async def post_detecetion(image: UploadFile = File(...)):
+async def post_detection(upload_file: UploadFile = File(...)):
 
     temp_dir = tempfile.gettempdir()
-    temp_path = os.path.join(temp_dir, image.filename)
-    with open(temp_path, 'wb') as uploaded_image:
-        shutil.copyfileobj(image.file, uploaded_image)
-    coordinates = yolo_v7_model.detect(temp_path)
-    coordinates_veh_plate = get_vehicle_registration_plate(coordinates)
+    temp_path = os.path.join(temp_dir, upload_file.filename)
+    with open(temp_path, 'wb') as uploaded_file:
+        shutil.copyfileobj(upload_file.file, uploaded_file)
 
-    response_data = []
-    if coordinates_veh_plate:
+    stride = int(yolo_v7_model.model.stride.max())
+    imgsz = check_img_size(yolo_v7_model.img_size, s=stride)
+    dataset = LoadImages(temp_path, img_size=imgsz, stride=stride)
+
+    response_data = {}
+    for idx, (path, img, im0s, vid_cap) in enumerate(dataset):
+        response_data[f'frame_{idx}'] = []
+        coordinates = yolo_v7_model.detect(img, im0s, imgsz)
+        coordinates_veh_plate = get_vehicle_registration_plate(coordinates)
         for veh_i, data in coordinates_veh_plate.items():
-            plate_number = get_plate_number(ocr_reader, temp_path, data['vehicle_registration_plate'])
-            vehicle_color = color_model.predict(temp_path, data['vehicle'])
-            vehicle_type = type_model.predict(temp_path, data['vehicle'])
-            response_data.append(DetectionResult(
-                camera_id=1,
+            plate_number = get_plate_number(ocr_reader, im0s, data['vehicle_registration_plate'])
+            vehicle_color = color_model.predict(im0s, data['vehicle'])
+            vehicle_type = type_model.predict(im0s, data['vehicle'])
+            response_data[f'frame_{idx}'].append(DetectionResult(
                 date=datetime.now().isoformat(),
                 vehicle_type=vehicle_type,
                 color=vehicle_color,

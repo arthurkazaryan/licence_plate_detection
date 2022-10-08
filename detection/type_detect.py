@@ -1,7 +1,8 @@
 from fastai.vision import *
-import numpy as np
 from utils.type_utils import from_preds_to_list
 from PIL import Image
+import tempfile
+import uuid
 
 
 class VehicleTypeModel:
@@ -18,17 +19,19 @@ class VehicleTypeModel:
 
         return model
 
-    def predict(self, image_path, veh_coordinates):
+    def predict(self, image_array, veh_coordinates):
 
-        image = Image.open(image_path)
-        image_array = np.array(image)
         img = image_array[veh_coordinates[1]: veh_coordinates[3], veh_coordinates[0]: veh_coordinates[2]]
         img = Image.fromarray(img)
+        temp_dir = tempfile.gettempdir()
+        image_path = os.path.join(temp_dir, f"{str(uuid.uuid4())}.jpg")
         img.save(image_path)
         self.model.data.add_test([image_path])
 
         preds, _ = self.model.get_preds(DatasetType.Test)
         pred_type = from_preds_to_list(preds, self.model)[0]
+
+        os.remove(image_path)
 
         return pred_type
 
