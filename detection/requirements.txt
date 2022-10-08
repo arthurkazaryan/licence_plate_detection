@@ -34,6 +34,7 @@ seaborn>=0.11.0
 # tensorflow>=2.4.1  # TFLite export
 # tensorflowjs>=3.9.0  # TF.js export
 # openvino-dev  # OpenVINO export
+fastai==1.0.61
 
 # Extras --------------------------------------
 # ipython  # interactive notebook

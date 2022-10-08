@@ -3,6 +3,7 @@ from api.models import DetectionResult
 from datetime import datetime
 from detect import YoloV7Model
 from color_detect import ColorModel
+from type_detect import VehicleTypeModel
 from utils.coordinates import get_vehicle_registration_plate
 from ocr.main import get_plate_number
 from ast import literal_eval
@@ -24,6 +25,8 @@ ocr_reader = easyocr.Reader(literal_eval(config['EasyOCR_finetuned']['lang_list'
                             user_network_directory=config['EasyOCR_finetuned']['user_network_directory'],
                             recog_network=config['EasyOCR_finetuned']['recog_network'],
                             gpu=True)
+type_model = VehicleTypeModel.create_model(config_object=config)
+
 
 @detection_v1.post('/push', tags=['detection'])
 async def post_detecetion(image: UploadFile = File(...)):
@@ -40,9 +43,11 @@ async def post_detecetion(image: UploadFile = File(...)):
         for veh_i, data in coordinates_veh_plate.items():
             plate_number = get_plate_number(ocr_reader, temp_path, data['vehicle_registration_plate'])
             vehicle_color = color_model.predict(temp_path, data['vehicle'])
+            vehicle_type = type_model.predict(temp_path, data['vehicle'])
             response_data.append(DetectionResult(
                 camera_id=1,
                 date=datetime.now().isoformat(),
+                vehicle_type=vehicle_type,
                 color=vehicle_color,
                 number=plate_number.upper(),
                 vehicle=data['vehicle'],
