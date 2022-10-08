@@ -7,3 +7,5 @@ class DetectionResult(BaseModel):
     vehicle_type: str
     color: str
     number: str
+    vehicle: list
+    plate: list
