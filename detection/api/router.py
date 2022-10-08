@@ -5,6 +5,7 @@ from detect import YoloV7Model
 from color_detect import ColorModel
 from utils.coordinates import get_vehicle_registration_plate
 from ocr.main import get_plate_number
+from ast import literal_eval
 import configparser
 import tempfile
 import easyocr
@@ -17,9 +18,12 @@ detection_v1 = APIRouter()
 config = configparser.ConfigParser()
 config.read('config.ini')
 yolo_v7_model = YoloV7Model.create_model(config_object=config)
-ocr_reader = easyocr.Reader(['en'], gpu=True)
 color_model = ColorModel.create_model(config_object=config)
-
+ocr_reader = easyocr.Reader(literal_eval(config['EasyOCR_finetuned']['lang_list']),
+                            model_storage_directory=config['EasyOCR_finetuned']['model_storage_directory'],
+                            user_network_directory=config['EasyOCR_finetuned']['user_network_directory'],
+                            recog_network=config['EasyOCR_finetuned']['recog_network'],
+                            gpu=True)
 
 @detection_v1.post('/push', tags=['detection'])
 async def post_detecetion(image: UploadFile = File(...)):
