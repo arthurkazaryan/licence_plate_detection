@@ -7,6 +7,11 @@ def get_vehicle_registration_plate(coordinates):
                                coor_i[1] < reg_plate[1] and
                                coor_i[2] > reg_plate[2] and
                                coor_i[3] > reg_plate[3]]
-            veh_reg_plate['vehicle_'+str(i)] = {'vehicle': veh_coordinates[0], 'vehicle_registration_plate': reg_plate}
+            if veh_coordinates:
+                veh_reg_plate['vehicle_'+str(i)] = {'vehicle': veh_coordinates[0],
+                                                    'vehicle_registration_plate': reg_plate}
+            else:
+                veh_reg_plate['vehicle_' + str(i)] = {'vehicle': [],
+                                                      'vehicle_registration_plate': []}
 
     return veh_reg_plate

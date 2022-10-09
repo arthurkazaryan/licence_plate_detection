@@ -11,7 +11,6 @@ import configparser
 import tempfile
 import easyocr
 import shutil
-import cv2
 import os
 
 from utils.datasets import LoadImages
@@ -47,19 +46,20 @@ async def post_detection(upload_file: UploadFile = File(...)):
     for idx, (path, img, im0s, vid_cap) in enumerate(dataset):
         response_data[f'frame_{idx}'] = []
         coordinates = yolo_v7_model.detect(img, im0s, imgsz)
-        coordinates_veh_plate = get_vehicle_registration_plate(coordinates)
-        for veh_i, data in coordinates_veh_plate.items():
-            plate_number = get_plate_number(ocr_reader, im0s, data['vehicle_registration_plate'])
-            vehicle_color = color_model.predict(im0s, data['vehicle'])
-            vehicle_type = type_model.predict(im0s, data['vehicle'])
-            response_data[f'frame_{idx}'].append(DetectionResult(
-                date=datetime.now().isoformat(),
-                vehicle_type=vehicle_type,
-                color=vehicle_color,
-                number=plate_number.upper(),
-                vehicle=data['vehicle'],
-                plate=data['vehicle_registration_plate']
-            ).dict())
+        if coordinates:
+            coordinates_veh_plate = get_vehicle_registration_plate(coordinates)
+            for veh_i, data in coordinates_veh_plate.items():
+                plate_number = get_plate_number(ocr_reader, im0s, data['vehicle_registration_plate'])
+                vehicle_color = color_model.predict(im0s, data['vehicle'])
+                vehicle_type = type_model.predict(im0s, data['vehicle'])
+                response_data[f'frame_{idx}'].append(DetectionResult(
+                    date=datetime.now().isoformat(),
+                    vehicle_type=vehicle_type,
+                    color=vehicle_color,
+                    number=plate_number.upper(),
+                    vehicle=data['vehicle'],
+                    plate=data['vehicle_registration_plate']
+                ).dict())
 
     os.remove(temp_path)
 

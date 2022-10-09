@@ -1,10 +1,7 @@
 from models.experimental import attempt_load
-from utils.datasets import LoadImages
-from utils.general import check_img_size, non_max_suppression, scale_coords, xyxy2xywh, xywh2xyxy
+from utils.general import non_max_suppression, scale_coords
 from utils.torch_utils import select_device, TracedModel
 from ast import literal_eval
-from PIL import Image
-import numpy as np
 import torch
 
 
@@ -43,14 +40,7 @@ class YoloV7Model:
 
     def detect(self, img, im0, imgsz):
 
-        # stride = int(self.model.stride.max())
-        # imgsz = check_img_size(self.img_size, s=stride)
-
-        # dataset = LoadImages(image_path, img_size=imgsz, stride=stride)
-
         coordinates = {key: [] for key in self.names}
-        # coordinates = {}
-        # idx = 0
 
         with torch.no_grad():
             # Run inference
@@ -58,8 +48,6 @@ class YoloV7Model:
                 self.model(torch.zeros(1, 3, imgsz, imgsz).to(self.device).type_as(next(self.model.parameters())))
             old_img_w = old_img_h = imgsz
             old_img_b = 1
-            # coordinates[f'frame_{idx}'] = {key: [] for key in self.names}
-            # for path, img, im0s, vid_cap in dataset:
             img = torch.from_numpy(img).to(self.device)
             img = img.half() if self.device.type != 'cpu' else img.float()  # uint8 to fp16/32
             img /= 255.0  # 0 - 255 to 0.0 - 1.0
@@ -79,9 +67,6 @@ class YoloV7Model:
                                        agnostic=self.agnostic_nms)
 
             for i, det in enumerate(pred):
-                # p, s, im0, frame = path, '', im0s, getattr(dataset, 'frame', 0)
-
-                # gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]
                 if len(det):
                     det[:, :4] = scale_coords(img.shape[2:], det[:, :4], im0.shape).round()
                     for *xyxy, conf, cls in reversed(det):
