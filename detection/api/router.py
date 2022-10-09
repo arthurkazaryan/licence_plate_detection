@@ -51,8 +51,7 @@ async def post_detection(upload_file: UploadFile = File(...)):
             for veh_i, data in coordinates_veh_plate.items():
                 plate_number = get_plate_number(ocr_reader, im0s, data['vehicle_registration_plate'])
                 vehicle_color = color_model.predict(im0s, data['vehicle'])
-                # vehicle_type = type_model.predict(im0s, data['vehicle'])
-                vehicle_type = 'auto'
+                vehicle_type = type_model.predict(im0s, data['vehicle'])
                 response_data[f'frame_{idx}'].append(DetectionResult(
                     date=datetime.now().isoformat(),
                     vehicle_type=vehicle_type,
