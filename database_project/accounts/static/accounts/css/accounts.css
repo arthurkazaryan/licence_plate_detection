@@ -16,6 +16,13 @@
     justify-content: space-between;
 }
 
+.input-element {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 50%;
+}
+
 .image-overview {
     display: flex;
     flex-direction: row;

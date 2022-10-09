@@ -3,12 +3,13 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, TemplateView, UpdateView
+from django.views.generic import CreateView, TemplateView
 from django.shortcuts import render
 from accounts.forms import RegistrationForm, LoginForm, SendImageForm
 from accounts.models import UserCamera, UserSnapshotItem, UserSnapshotProject
+from accounts.utils import draw_on_image
 from database.utils import DataMixin
 import requests
 import cv2
@@ -72,7 +73,7 @@ class ProfilePage(DataMixin, TemplateView, LoginRequiredMixin):
             user=request.user,
             cameras=cameras,
             snapshots=snapshots,
-            image_form=image_form
+            image_form=image_form,
         )
 
         return render(request, self.template_name, context=context)
@@ -82,33 +83,34 @@ class ProfilePage(DataMixin, TemplateView, LoginRequiredMixin):
         send_image_form = SendImageForm(request.POST, request.FILES)
         if send_image_form.is_valid():
             data = send_image_form.cleaned_data
-            file = {'image': data['image_path']}
-            try:
-                response = requests.post("http://127.0.0.1:7861/api/v1/detection/push", files=file)
-                response_data = response.json()
+            file = {'upload_file': data['image_path']}
+            file_type_flag = 'image'
+        else:
+            messages.error(request, f'Error occurred when processing data.')
+            return HttpResponseRedirect(reverse('accounts-home'))
+
+        try:
+            response = requests.post("http://127.0.0.1:7861/api/v1/detection/push", files=file)
+            response_data = response.json()
+            if file_type_flag == 'image':
                 user_snapshot_project = UserSnapshotProject(
                     user=request.user,
                     image=data['image_path']
                 )
                 user_snapshot_project.save()
                 image = cv2.imread(user_snapshot_project.image.path)
-                for data in response_data:
+                for cars_data in response_data['frame_0']:
                     user_snapshot_item = UserSnapshotItem(
                         project_id=user_snapshot_project.id,
-                        color=data['color'],
-                        plate_number=data['number'],
+                        color=cars_data['color'],
+                        plate_number=cars_data['number'],
                     )
                     user_snapshot_item.save()
-                    veh_co = data['vehicle']
-                    pl_co = data['plate']
-                    image = cv2.rectangle(image, veh_co[:2], veh_co[2:], (0, 0, 255), 2)
-                    image = cv2.rectangle(image, pl_co[:2], pl_co[2:], (0, 255, 255), 2)
+                image = draw_on_image(image, response_data['frame_0'])
                 cv2.imwrite(user_snapshot_project.image.path, image)
-                messages.success(request, f'Project has been successfully created.')
-            except:
-                messages.error(request, f'Server is currently unavailable.')
-        else:
-            messages.error(request, f'Error occurred when processing data.')
+            messages.success(request, f'Project has been successfully created.')
+        except:
+            messages.error(request, f'Server is currently unavailable.')
 
         return HttpResponseRedirect(reverse('accounts-home'))
 

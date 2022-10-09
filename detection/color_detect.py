@@ -1,4 +1,3 @@
-from PIL import Image
 import cv2
 import numpy as np
 import tensorflow as tf
@@ -18,10 +17,8 @@ class ColorModel:
 
         return model
 
-    def predict(self, image_path, veh_coordinates):
+    def predict(self, image_array, veh_coordinates):
 
-        image = Image.open(image_path)
-        image_array = np.array(image)
         img = image_array[veh_coordinates[1]: veh_coordinates[3], veh_coordinates[0]: veh_coordinates[2]]
         img = np.expand_dims(cv2.resize(img, (100, 100), cv2.INTER_AREA), axis=0)
 
