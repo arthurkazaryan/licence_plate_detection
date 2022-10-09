@@ -20,28 +20,15 @@
     <hr>
     <div class="cards">
     <div class="white-background card mb-10 pd-10">
-        <div class="white-background input-element">
-            <form action="" method="post" align="center" enctype="multipart/form-data">
-            {% csrf_token %}
-            {% for f in image_form %}
-                <label for="{{ f.id_for_label }}">{{ f.label }}</label>
-                <div class="mb-10">{{ f }}</div>
-                <div class="">{{ f.errors }}</div>
-            {% endfor %}
-            <button type="submit" class="button color form-middle mt-10">Predict</button>
-            </form>
-        </div>
-        <div class="white-background input-element">
-            <form action="" method="post" align="center" enctype="multipart/form-data">
-            {% csrf_token %}
-            {% for f in video_form %}
-                <label for="{{ f.id_for_label }}">{{ f.label }}</label>
-                <div class="mb-10">{{ f }}</div>
-                <div class="">{{ f.errors }}</div>
-            {% endfor %}
-            <button type="submit" class="button color form-middle mt-10">Predict</button>
-            </form>
-        </div>
+        <form action="" method="post" align="center" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for f in image_form %}
+            <label for="{{ f.id_for_label }}">{{ f.label }}</label>
+            <div class="mb-10">{{ f }}</div>
+            <div class="">{{ f.errors }}</div>
+        {% endfor %}
+        <button type="submit" class="button color form-middle mt-10">Predict</button>
+        </form>
     </div>
     {% for snapshot in snapshots %}
     <div class="white-background card mb-10 pd-10">
