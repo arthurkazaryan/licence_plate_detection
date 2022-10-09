@@ -1,5 +1,5 @@
 <h1 align="center">Licence plate detection</h1>
-<p align="center"><img src="./misc/main.jpg" alt="scheme" width="100%"></p>
+<p align="center"><img src="./database_project/misc/main.jpg" alt="scheme" width="100%"></p>
 <br>
 The project is made as part of a deep learning course at ITMO University. The goal is to train and deploy a NN model for licence 
 plate recognition. 
@@ -24,7 +24,7 @@ python3 download_dataset.py
 After the script has finished, the dataset with 4000 images was loaded into the <a href="https://roboflow.com/">Roboflow</a>.
 
 <h3>Training Yolov7</h3>
-The training process of Yolov7 was done in Google Colab notebook <a href="https://colab.research.google.com/drive/16aI5i82ux8D0GAocmPq-Nel07f9aDtRu?authuser=1#scrollTo=1iqOPKjr22mL">(link)</a>. 
+The training process of Yolov7 was done in Google Colab notebook <a href="https://github.com/arthurkazaryan/licence_plate_detection/blob/main/detection/YOLOv7_train.ipynb">(link)</a>. 
 It took almost 3 hours to complete 55 epochs.
 <p align="center"><img src="./misc/detection_animation.gif" alt="detection_animation" width="70%"></p>
 
@@ -49,15 +49,21 @@ docker-compose up --build
 ```
 
 <h3>Detection</h3>
-The detection module is wrapped around Fast API service. The main task of the module is to receive a POST request, 
-containing an image 
+<img src="./detection/misc/main.jpg" alt="main" width="100%">
 
-``{'image': <image>}``, 
-process it, and return a json-type data, which contains the following:
+<br>
+The detection module is wrapped around Fast API service. The main task of the module is to receive a POST request, 
+containing an image or video data 
+
+``{'upload_file': <image/video>}``
+, process it, and return a json-type data, which contains the following:
 <ul>
-<li>date;</li>
-<li>color;</li>
-<li>number.</li>
+<li>date: datetime;</li>
+<li>vehicle_type: str;</li>
+<li>color: str;</li>
+<li>number: str;</li>
+<li>vehicle: list;</li>
+<li>plate: list.</li>
 </ul>
 
 <p align="center"><img src="./misc/detection_scheme.jpg" alt="detection_scheme" width="70%"></p>
@@ -85,5 +91,5 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-<p align="center"><img src="./misc/view.jpg" alt="scheme" width="100%"></p>
+<p align="center"><img src="./database_project/misc/view.jpg" alt="scheme" width="100%"></p>
 <p align="center">View page of a detected picture</p>
