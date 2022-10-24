@@ -27,7 +27,7 @@ ocr_reader = easyocr.Reader(literal_eval(config['EasyOCR_finetuned']['lang_list'
                             user_network_directory=config['EasyOCR_finetuned']['user_network_directory'],
                             recog_network=config['EasyOCR_finetuned']['recog_network'],
                             gpu=True)
-type_model = VehicleTypeModel.create_model(config_object=config)
+# type_model = VehicleTypeModel.create_model(config_object=config)
 
 
 @detection_v1.post('/push', tags=['detection'])
@@ -51,7 +51,7 @@ async def post_detection(upload_file: UploadFile = File(...)):
             for veh_i, data in coordinates_veh_plate.items():
                 plate_number = get_plate_number(ocr_reader, im0s, data['vehicle_registration_plate'])
                 vehicle_color = color_model.predict(im0s, data['vehicle'])
-                vehicle_type = type_model.predict(im0s, data['vehicle'])
+                vehicle_type = 'cargo'  # type_model.predict(im0s, data['vehicle'])
                 response_data[f'frame_{idx}'].append(DetectionResult(
                     date=datetime.now().isoformat(),
                     vehicle_type=vehicle_type,
