@@ -105,7 +105,6 @@ body {
 
 /* FORMS */
 .input-form {
-    display: block;
     font-family: 'Inter', sans-serif;
     line-height: 1.5;
     color: #212529;

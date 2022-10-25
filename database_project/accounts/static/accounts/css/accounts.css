@@ -6,7 +6,24 @@
 }
 
 .card {
-    width: 450px
+    width: 450px;
+    transition: 0.15s linear;
+}
+
+.card:hover {
+    box-shadow: 0 10px 10px #ccc;
+}
+
+.input-card {
+    width: 100%;
+}
+
+table, tr {
+    font-family: 'Inter', sans-serif;
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+    border-collapse: collapse;
+    text-align: center;
 }
 
 .cards {
@@ -36,6 +53,11 @@
 .alert.success {
     border-color: #58c758;
     background-color: #cefad0;
+}
+
+.alert.info {
+    border-color: #b3dffc;
+    background-color: #b3e5fc;
 }
 
 .alert.error {

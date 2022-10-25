@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UsernameField
 from django.contrib.auth.models import User
-import datetime
 
 
 class RegistrationForm(UserCreationForm):
@@ -18,7 +17,3 @@ class RegistrationForm(UserCreationForm):
 class LoginForm(AuthenticationForm):
     username = UsernameField(label='Имя пользователя', widget=forms.TextInput(attrs={'class': 'input-form form-large', 'autofocus': True}))
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'input-form form-large', 'autocomplete': 'current-password'}))
-
-
-class SendImageForm(forms.Form):
-    image_path = forms.FileField(widget=forms.FileInput(attrs={'accept': 'image/*'}))

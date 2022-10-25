@@ -1,0 +1,49 @@
+{% extends 'database/base.html' %}
+
+{% load static %}
+<!DOCTYPE html>
+
+{% block links %}
+    <link type="text/css" href="{% static 'accounts/css/accounts.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+    {% if messages %}
+        {% for message in messages %}
+          <div class="alert {{ message.tags }} white-board">
+              {{ message }}
+          </div>
+        {% endfor %}
+    {% endif %}
+    <h2 class="text-title">Text comparison</h2>
+    <hr>
+    <div class="cards">
+    <div class="white-background input-card card mb-10 pd-10">
+        <form action="" method="post" align="center" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for f in text_form %}
+            <label for="{{ f.id_for_label }}">{{ f.label }}</label>
+            <div class="mb-10">{{ f }}</div>
+            <div class="">{{ f.errors }}</div>
+        {% endfor %}
+        <button type="submit" class="button color form-middle mt-10">Predict</button>
+        </form>
+    </div>
+    <div class="white-background input-card card mb-10 pd-10">
+        <table style="width: 100%;">
+            <tr style="height:50px">
+                <th>Company name</th>
+                <th>Nearest name</th>
+                <th>Similarity</th>
+            </tr>
+            {% for us_comp in user_comparisons %}
+                <tr style="height:50px">
+                    <td>{{ us_comp.text }}</td>
+                    <td>{{ us_comp.nearest_text }}</td>
+                    <td>{{ us_comp.similarity }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    </div>
+{% endblock %}

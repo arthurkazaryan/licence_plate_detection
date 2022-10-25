@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'database.apps.DatabaseConfig',
     'accounts.apps.AccountsConfig',
+    'licence_detection.apps.LicenceDetectionConfig',
+    'text_comparison.apps.TextComparisonConfig',
 ]
 
 MIDDLEWARE = [
